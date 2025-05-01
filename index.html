@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Surat Untukmu</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #1b1b1b;
+      overflow: hidden;
+      font-family: 'Courier New', monospace;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      position: relative;
+      color: #f0e6f6;
+    }
+
+    /* Bintang latar */
+    .stars {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .star {
+      position: absolute;
+      width: 2px;
+      height: 2px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.5;
+      animation: twinkle 3s infinite ease-in-out;
+    }
+
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.2; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); }
+    }
+
+    .envelope {
+      position: relative;
+      width: 90vw;
+      height: 60vh;
+      max-width: 600px;
+      max-height: 500px;
+      background-color: #c7a29b;
+      border-radius: 6px;
+      box-shadow: 0 0 20px rgba(255,255,255,0.1);
+      cursor: pointer;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .letter {
+      position: absolute;
+      top: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 85vw;
+      height: 50vh;
+      max-width: 550px;
+      max-height: 420px;
+      background: rgba(0,0,0,0.7);
+      padding: 25px;
+      box-sizing: border-box;
+      border-radius: 6px;
+      opacity: 0;
+      pointer-events: none;
+      overflow-y: auto;
+      transition: opacity 1s ease;
+      white-space: pre-wrap;
+      color: #fce4ec;
+      font-size: 18px;
+    }
+
+    .open .letter {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #title {
+      position: absolute;
+      top: -40px;
+      width: 100%;
+      text-align: center;
+      font-size: 24px;
+      color: #ffccd5;
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    .love {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+      width: 100px;
+      height: 100px;
+      background: url('https://upload.wikimedia.org/wikipedia/commons/6/69/Heart_icon.svg') no-repeat center center;
+      background-size: contain;
+      animation: moveLove 4s infinite ease-in-out;
+      opacity: 1;
+    }
+
+    @keyframes moveLove {
+      0% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -55%) scale(1.2); }
+      100% { transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .instruction {
+      position: absolute;
+      top: 60px;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-size: 18px;
+      color: #ffffff;
+      opacity: 1;
+      transition: opacity 1s ease;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<!-- Gambar Love -->
+<div class="love" id="love"></div>
+
+<!-- Instruksi klik -->
+<div class="instruction" id="instruction">Klik kotak untuk buka surat</div>
+
+<!-- Amplop -->
+<div class="envelope" onclick="openEnvelope(this)">
+  <div class="letter">
+    <div id="title">Ini buat kamu</div>
+    <div id="text"></div>
+  </div>
+</div>
+
+<script>
+  // Bintang acak
+  const starsContainer = document.getElementById("stars");
+  for (let i = 0; i < 100; i++) {
+    const star = document.createElement("div");
+    star.className = "star";
+    star.style.top = Math.random() * 100 + "%";
+    star.style.left = Math.random() * 100 + "%";
+    star.style.animationDuration = (Math.random() * 5 + 5) + "s";
+    starsContainer.appendChild(star);
+  }
+
+  const paragraphs = [
+    "Haii... Udah malem yaa??",
+    "Aku gatauu sekarang kamuu lagi ngapain, lagi rebahan kahh? main game? Atauu malah ketiduran??",
+    "Tapii... semoga ajaa surat ini nyampe sebelum kamu bablas ke alam mimpi dehh wkwk🤣.",
+    "Malam tuhh waktunya emangg bikin tenangg, tapi juga waktu paling rawan buat kepikiran yang aneh-aneh😗.",
+    "Makanya aku nongol buat gangguin kamuu, biar kamuu nggaa cuman mikirin hal ramdom... Tapi juga mikirin akuu(dikit aja gapapaa kokk😚) wkwkwk.",
+    "Chat an sama kamuu tuhh udah kayak rutinitas wajib. Kalau sehari nggak muncul notif dari kamuu, rasanya kayak ada yang hilang. Kayak air minum habis pas lagi makan yang pedes, taukan rasanya gimana?",
+    "Kamu tuh kadang ngeselin, kadang bikin senyum-senyum sendiri, kadang bikin mikir:\"Kok bisa ya ada orang kayak dia yang nyambung banget padahal belum pernah ketemu langsung\". Tapi bikin happy☺️.",
+    "Dan jujur ajaa... Aku mulai nungguin. Nungguin kamuu cerita, nanya kabar, atau sekadar ngirim stiker random nggak jelas.",
+    "Malam ini akuu cuman mau bilang:\"Istirahat yang cukup yaa. Jangan begadangg 😤\". Akuu juga gabakal begadang lagii kokk😉.",
+    "Kalau kamuu sakit, nanti siapa yang aku chat tiap pagi, siang, malam?",
+    "Pokoknya kita saling jaga kesehatan ajaa yaa...",
+    "Dan satuu lagii... Kalau nanti kamu mimpi, semoga mimpinya seruu... Kalau bisa sih, aku ada di situ juga. Nggak usah jadi pangeran dehh, jadi tukang cilok keliling juga gapapa kokk. Yang penting bisaa deket kamu 😜.",
+    "Akuu sihh gaa punya alasan yang penting buat nulis gini. Cuma... yaa gimanaa yaa, kepikiran kamu teruss. Dari pada diem di otak terus, mending aku masukin ke surat inii.",
+    "Kadang akuu mikir:\"kamuu kalau berdirii disamping aku gimanaa yaa??\", soalnya kamu tuhh dimata akuu pendekk, ehh... bercanda🙏.",
+    "Akuu ngerasa beruntung bisa kenal kamuu🤗.",
+    "Karena kamuu itu bukan cuma orang yang “cukup” baik, tapi kamu lebih dari itu.",
+    "Kalauu boleh tauu, akuu tuhh selalu penasaran nama kamuu. Masa nama kamu Cyaa sihh?? kadang gituu tuh otak akuu.",
+    "Akuu gaa minta apa-apa.",
+    "Aku cuma pengen kamu tau, kalau ada seseorang yang bener-bener seneng bisa deket sama kamuu. Mungkin aku nggaa bisa ada di samping kamu sekarang, tapii... jarak nggaa bikin aku lupa sama semua hal kecil yang bikin kamu istimewa.",
+    "Gatauu kenapaa yaa kalau lagii chattingan sama kamu akuu suka mati topikk, tapi kalau aku bikin kayak ginii tuh malah banyak topik nyaa. Aku jadii heran dehh🤔.",
+    "Akuu gaa pinter pinter amat kokk bikin ginian tuhh, sebenernya aku ada bukuu panduan nyaa buat kayak gini tuhh, jadii gaa sepenuhnya aku pikirin sendirii, akuu sihh cuman mikirin konsep samaa gimanaa sihh biar inii tuhh bisa jalan.",
+    "Sebenernya akuu lagi galauu😔. Aku dirumah sekarang sendiriann, gada sapa-sapa. Semuanya pada berangkat tadii pagii sampe nanti hari sabtuu aku sendiri nihh... kamuu jangan kemana-mana yahhh nanti akuu kesepiann lagii...",
+    "Ehhh, kokk jadii curhatt ginii yaa?? gausah di pikirin dehh, maaf yaa aku emang random orang nyaa hehehe.",
+    "Sebenernya sihh masih banyak yang mau akuu omongin tapii ini udah panjang bangettt..",
+    "Nanti dehh aku bikinin lagi yang lebih bagus darii inii.",
+    "Yaudaa segini duluu dari akuu, yang nggaa suka basa basii...",
+    "Tapii akhir-akhri ini suka kamuu. ehhh, suka chattingan sama kamu maksudnya 😅.",
+    "Terakhir. akuu mau kasih kamuu pertanyaan niihh(kalau gamau jawab skip ajaa☺️).",
+    "1. Kamu tuh sadar gaa sihh kalau kamuu tuh cantik??",
+    "2. Apa yang buat kamu antusias banget sii akuu bikin kek ginii tuhh?",
+    "3. Aku penasaran apa hobi kamu?",
+    "4. Kenapaa kamuu pengen ngelanjutin chattingan sama akuu(jawab jujur!).",
+    "5. Terakhir, aku pengen tau nama kamuu, masa cyaa doang(gapapa gaa jawab jugaa).",
+    "Segitu doang mungkin dari akuu, jangan lupa di jawabb yaa...",
+    "Selamat tinggal di surat selanjutnyaa..."
+  ];
+
+  let currentParagraph = 0;
+
+  function openEnvelope(el) {
+    const instruction = document.getElementById("instruction");
+    const love = document.getElementById("love");
+    const title = document.getElementById("title");
+
+    love.style.opacity = '0';
+    love.style.pointerEvents = 'none';
+
+    instruction.style.opacity = '0';
+
+    el.classList.add("open");
+    title.style.opacity = '1';
+
+    setTimeout(() => {
+      title.style.opacity = '0';
+    }, 3500);
+
+    setTimeout(() => {
+      typeParagraph();
+    }, 4000);
+  }
+
+  function typeParagraph() {
+    const textContainer = document.getElementById("text");
+    const text = paragraphs[currentParagraph];
+    let j = 0;
+    const baseSpeed = 90; // Kecepatan dasar
+
+    function typeNextChar() {
+      if (j < text.length) {
+        const char = text.charAt(j);
+        textContainer.innerHTML += char;
+        j++;
+        textContainer.parentElement.scrollTop = textContainer.parentElement.scrollHeight;
+
+        let delay = baseSpeed;
+
+        // Jeda setelah tanda baca
+        if (char === ',') {
+          delay += 450;
+        } else if (char === '.') {
+          delay += 650;
+        } else if (char === '?') {
+            delay += 700;
+        }
+
+        setTimeout(typeNextChar, delay);
+      } else {
+        currentParagraph++;
+        if (currentParagraph < paragraphs.length) {
+          textContainer.innerHTML += "\n\n";
+          setTimeout(typeParagraph, 1200);
+        }
+      }
+    }
+
+    typeNextChar();
+  }
+
+  // Tampilkan instruksi saat halaman dimuat
+  window.onload = () => {
+    document.getElementById("instruction").style.opacity = '1';
+  }
+</script>
+
+</body>
+</html>
